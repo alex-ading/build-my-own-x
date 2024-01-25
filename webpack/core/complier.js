@@ -41,7 +41,8 @@ class Compiler {
     this.hooks.run.call();
     const entries = this.getEntries();
     this.buildEntryModule(entries);
-    // console.log('entries: ', entries);
+    console.log('this.entries: ', this.entries);
+    console.log('this.modules: ', this.modules);
   }
 
   /**
@@ -80,15 +81,14 @@ class Compiler {
   /**
    * 编译单个模块
    * @param {*} moduleName 入口模块名称
-   * @param {*} absolutePath 模块的绝对路径
+   * @param {*} modulePath 模块的路径
    */
-  buildModule(moduleName, absolutePath) {
-    const originSourceCode = fs.readFileSync(absolutePath, 'utf-8');
+  buildModule(moduleName, modulePath) {
+    const originSourceCode = fs.readFileSync(modulePath, 'utf-8');
     this.originSourceCode = originSourceCode; // 原始代码
     this.moduleCode = originSourceCode; // 编译后的代码
-    this.useLoader(absolutePath);
-    const module = this.useWebpackCompiler(moduleName, absolutePath);
-    console.log('module: ', module);
+    this.useLoader(modulePath);
+    const module = this.useWebpackCompiler(moduleName, modulePath);
     return module;
   }
 
@@ -128,12 +128,12 @@ class Compiler {
     const moduleId = `./${path.relative(this.rootPath, absolutePath)}`; // 获取文件相对于根路径的相对路径
     const module = {
       id: moduleId,
-      dependencies: new Set(), // 该模块所依赖的模块的相对于根路径的相对路径
+      dependencies: new Set(), // 该模块所依赖的模块的相对于根路径的相对路径，也就是 moduleId
       name: [moduleName], // 该模块所属的入口文件的名字，来自 entries
       _source: '', // 经过 loader、babel 处理过的代码
     };
 
-    // 使用 babel 生成 ast，并替换一些代码
+    // 使用 babel 生成 ast，并替换一些代码 https://astexplorer.net/
     const ast = parser.parse(this.moduleCode, { sourceType: 'module' });
     traverse(ast, {
       CallExpression: (nodePath) => {
@@ -156,12 +156,24 @@ class Compiler {
           const subModuleId = `./${path.relative(this.rootPath, moduleAbsolutePath)}`;
           // 将源代码中的 require 替换为 __webpack_require__
           node.callee = types.identifier('__webpack_require__');
-          //  替换源代码 require 中的路径
+          // 替换源代码 require 中的路径
           node.arguments = [types.stringLiteral(subModuleId)];
           // 添加到当前模块的依赖中
           module.dependencies.add(subModuleId);
         }
       },
+    });
+
+    // 递归 build 当前文件的依赖文件
+    const existModuleIds = Array.from(this.modules).map((item) => (item.id));
+    module.dependencies.forEach((dependencyModuleId) => {
+      if (existModuleIds.includes(dependencyModuleId)) {
+        const existModule = Array.from(this.modules).find((item) => (item.id === dependencyModuleId));
+        existModule.name.push(moduleName);
+      } else {
+        const depModule = this.buildModule(moduleName, dependencyModuleId);
+        this.modules.add(depModule);
+      }
     });
 
     const { code } = generator(ast);
