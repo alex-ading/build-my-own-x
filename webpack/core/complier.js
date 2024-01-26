@@ -21,9 +21,9 @@ class Compiler {
       // compilation 完成时的钩子
       done: new SyncHook(),
     };
-    // 所有入口文件的代码
-    this.entries = new Set();
-    // 所有依赖
+    // 所有入口模块
+    this.entryModules = new Set();
+    // 所有依赖的模块
     this.modules = new Set();
     // 所有代码块
     this.chunks = new Set();
@@ -41,7 +41,7 @@ class Compiler {
     this.hooks.run.call();
     const entries = this.getEntries();
     this.buildEntryModule(entries);
-    console.log('this.entries: ', this.entries);
+    console.log('this.entryModules: ', this.entryModules);
     console.log('this.modules: ', this.modules);
   }
 
@@ -74,8 +74,10 @@ class Compiler {
     Object.keys(entries).forEach((entryName) => {
       const entryAbsolutePath = entries[entryName];
       const entryModule = this.buildModule(entryName, entryAbsolutePath);
-      this.entries.add(entryModule);
+      this.entryModules.add(entryModule);
+      this.buildChunk(entryName, entryModule);
     });
+    console.log('chunks', this.chunks);
   }
 
   /**
@@ -180,6 +182,20 @@ class Compiler {
     module._source = code;
 
     return module;
+  }
+
+  /**
+   * 根据入口文件，集成 chunk
+   * @param {*} entryName
+   * @param {*} entryModule
+   */
+  buildChunk(entryName, entryModule) {
+    const chunk = {
+      name: entryName, // 每一个入口文件作为一个 chunk
+      entryModule, // 入口文件编译后的模块
+      modules: Array.from(this.modules).filter((module) => module.name.includes(entryName)), // 入口文件层层递归下去所依赖的所有模块
+    };
+    this.chunks.add(chunk);
   }
 }
 
