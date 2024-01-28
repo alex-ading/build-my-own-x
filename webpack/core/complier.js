@@ -16,9 +16,9 @@ class Compiler {
     this.hooks = { // 后续可从 options 里注册各个钩子的回调事件，并在特定时机执行
       // 开始编译时的钩子
       run: new SyncHook(),
-      // 写入文件之前的钩子
+      // 写入文件之前的钩子，在开始执行写入动作时执行
       emit: new SyncHook(),
-      // compilation 完成时的钩子
+      // compilation 完成时的钩子，写入完成后执行
       done: new SyncHook(),
     };
     // 所有入口模块
@@ -27,7 +27,7 @@ class Compiler {
     this.modules = new Set();
     // 所有代码块
     this.chunks = new Set();
-    // 所有文件对象
+    // 所有文件对象（存在内存中）
     this.assets = new Set();
     // 所有文件名
     this.files = new Set();
@@ -40,9 +40,10 @@ class Compiler {
   run(callback) {
     this.hooks.run.call();
     const entries = this.getEntries();
-    this.buildEntryModule(entries);
-    console.log('this.entryModules: ', this.entryModules);
-    console.log('this.modules: ', this.modules);
+    this.buildEntryModule(entries); // 从入口文件递归地编译文件，并形成 chunk 对象
+    this.exportFile(callback); // 从 chunk 对象写入文件系统
+    // console.log('this.entryModules: ', this.entryModules);
+    // console.log('this.modules: ', this.modules);
   }
 
   /**
@@ -77,7 +78,7 @@ class Compiler {
       this.entryModules.add(entryModule);
       this.buildChunk(entryName, entryModule);
     });
-    console.log('chunks', this.chunks);
+    // console.log('chunks', this.chunks);
   }
 
   /**
@@ -196,6 +197,82 @@ class Compiler {
       modules: Array.from(this.modules).filter((module) => module.name.includes(entryName)), // 入口文件层层递归下去所依赖的所有模块
     };
     this.chunks.add(chunk);
+  }
+
+  /**
+   * 写入文件系统
+   */
+  exportFile(callback) {
+    const { output } = this.options;
+    this.chunks.forEach((chunk) => {
+      const fileName = output.filename.replace('[name]', chunk.name);
+      this.assets[fileName] = this.getTargetCode(chunk); // 根据 chunk 对象生成目标代码
+    });
+    // 调用 emit 钩子
+    this.hooks.emit.call();
+
+    if (!fs.existsSync(output.path)) {
+      fs.mkdirSync(output.path);
+    }
+    // 将 assets 中的内容写入文件系统
+    Object.keys(this.assets).forEach((fileName) => {
+      const filePath = path.join(output.path, fileName);
+      fs.writeFileSync(filePath, this.assets[fileName]);
+    });
+
+    // 调用 done 钩子
+    this.hooks.done.call();
+
+    callback(null, {}); // TODO
+  }
+
+  /**
+   * 根据 chunk 内容生成最终的 bundle
+   * @param {*} chunk
+   */
+  getTargetCode(chunk) {
+    const { entryModule, modules } = chunk;
+    return `
+  (() => {
+    var __webpack_modules__ = {
+      ${modules
+    .map((module) => `
+          '${module.id}': (module) => {
+            ${module._source}
+      }
+        `)
+    .join(',')}
+    };
+    // cache
+    var __webpack_module_cache__ = {};
+
+    // __webpack_require__
+    function __webpack_require__(moduleId) {
+      var cachedModule = __webpack_module_cache__[moduleId];
+      if (cachedModule !== undefined) {
+        return cachedModule.exports;
+      }
+      // Create a new module (and put it into the cache)
+      var module = (__webpack_module_cache__[moduleId] = {
+        // no module.id needed
+        // no module.loaded needed
+        exports: {},
+      });
+
+      // Execute the module function
+      __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+
+      // Return the exports of the module
+      return module.exports;
+    }
+
+    var __webpack_exports__ = {};
+    // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+    (() => {
+      ${entryModule._source}
+    })();
+  })();
+  `;
   }
 }
 
