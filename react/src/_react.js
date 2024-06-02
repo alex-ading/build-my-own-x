@@ -45,18 +45,13 @@ function createDom(fiber) {
       ? document.createTextNode('')
       : document.createElement(fiber.type)
 
-  // 设置属性
-  Object.keys(fiber.props)
-    .filter((key) => key !== 'children')
-    .forEach((key) => {
-      ele[key] = fiber.props[key];
-    })
+  updateDom(dom, {}, fiber.props)
 
   return dom
 }
 
 let nextUnitOfWork = null // 下一个工作单元
-let wipRoot = null // 根工作单元
+let wipRoot = null // 根工作单元， work in progress root
 let currentRoot = null // 上一个 fiber 树
 let deletions = null
 
@@ -170,7 +165,10 @@ function commitWork(fiber) {
  * @returns 
  */
 function performUnitOfWork(fiber) {
-  // 2. 处理 fiber 和 fiber children 之间的关系
+  // 1. 为 fiber 创建 dom
+  if (!fiber.dom) fiber.dom = createDom(fiber);
+
+  // 2. 创建 new fiber，处理 fiber 和 fiber children 之间的关系
   const elements = fiber.props.children;
   reconcileChildren(fiber, elements)
 
@@ -209,7 +207,7 @@ function reconcileChildren(wipFiber, elements) {
 
   while (index < elements.length || oldFiber != null) {
     const element = elements[index];
-    const newFiber = null;
+    let newFiber = null;
 
     // 判断新旧 fiber 是否是相同类型元素
     const sameType = oldFiber && element && element.type == oldFiber.type
@@ -219,7 +217,7 @@ function reconcileChildren(wipFiber, elements) {
         type: oldFiber.type,
         dom: oldFiber.dom,
         alternate: oldFiber,
-        props: element.props,
+        props: element.props, 
         effectTag: "UPDATE",
       }
     }
@@ -227,7 +225,7 @@ function reconcileChildren(wipFiber, elements) {
     if (element && !sameType) {
       newFiber = {
         type: element.type,
-        props: element.props,
+        props: element.props || {},
         dom: null,
         parent: wipFiber,
         alternate: null,
@@ -248,9 +246,9 @@ function reconcileChildren(wipFiber, elements) {
     }
     // 更新新 fiber 的关系
     if (index === 0) {
-      wipFiber.child = newFiber; // 父元素只关联第一个 fiber
+      wipFiber.child = newFiber; // 父元素使用 child 属性关联第一个 fiber
     } else {
-      prevSibling.sibling = newFiber; // 其他 fiber 指向下一个兄弟 fiber
+      prevSibling.sibling = newFiber; // 其他 fiber 依靠 sibling 属性指向下一个兄弟 fiber
     }
     prevSibling = newFiber;
     index++
@@ -279,6 +277,13 @@ function workLoop(deadline) {
 }
 
 // 1. 浏览器空闲时启动
-render({}, document.getElementById('app'))
+// render({}, document.getElementById('app'))
 requestIdleCallback(workLoop)
 
+
+const _React = {
+  createElement,
+  render
+}
+
+export default _React
