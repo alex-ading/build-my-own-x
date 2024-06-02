@@ -123,6 +123,22 @@ function render(element, container) {
 }
 
 /**
+ * 删除 dom 元素
+ * @param {*} fiber 
+ * @param {*} domParent 
+ */
+function commitDeletion(fiber, domParent) {
+  if (fiber.dom) {
+    domParent.removeChild(fiber.dom)
+  } else {
+    // function App(props) {
+    //   return <h1 onClick={() => handleClickTitle(props.name)}>Hi {props.name}</h1>
+    // }
+    commitDeletion(fiber.child, domParent) // 函数层没有 dom（App），children 有 dom（h1）
+  }
+}
+
+/**
  * 启动渲染
  */
 function commitRoot() {
@@ -140,7 +156,13 @@ function commitRoot() {
 function commitWork(fiber) {
   if (!fiber) return
 
-  const domParent = fiber.parent.dom;
+  let domParentFiber = fiber.parent
+  // 兼容函数组件，向上递归找到 dom 元素作为父元素，即把函数层过滤掉
+  while (!domParentFiber.dom) {
+    domParentFiber = domParentFiber.parent
+  }
+  const domParent = domParentFiber.dom
+
   // 新增
   if (fiber.effectTag === "PLACEMENT" && fiber.dom != null) {
     domParent.appendChild(fiber.dom)
@@ -151,7 +173,7 @@ function commitWork(fiber) {
       fiber.props
     )
   } else if (fiber.effectTag === "DELETION") {
-    domParent.removeChild(fiber.dom) // 删除
+    commitDeletion(fiber, domParent)
   }
 
   // 递归渲染子节点与兄弟节点
@@ -165,12 +187,13 @@ function commitWork(fiber) {
  * @returns 
  */
 function performUnitOfWork(fiber) {
-  // 1. 为 fiber 创建 dom
-  if (!fiber.dom) fiber.dom = createDom(fiber);
-
-  // 2. 创建 new fiber，处理 fiber 和 fiber children 之间的关系
-  const elements = fiber.props.children;
-  reconcileChildren(fiber, elements)
+  // 区分组件类型
+  const isFunctionComponent = fiber.type instanceof Function
+  if (isFunctionComponent) { // 函数组件
+    updateFunctionComponent(fiber)
+  } else { // 非函数组件
+    updateHostComponent(fiber)
+  }
 
   // 3. return 下一个工作单元（对 fiber children 进行递归处理）
   // 优先级：子 fiber > 兄弟 fiber > 父 fiber的兄弟 fiber
@@ -187,7 +210,36 @@ function performUnitOfWork(fiber) {
 }
 
 /**
- * 处理单个工作单元及其 children 的改动，包括新增、删除、更新
+ * 处理函数组件
+ * @param {*} fiber 
+ */
+function updateFunctionComponent(fiber) {
+  // 函数组件与普通组件的区别：
+  // 函数组件没有 dom 节点
+  // 函数自建的 props 来自于运行时的返回值，而不是依靠 babel 解析的
+
+  // function App(props) {
+  //   return <h1 onClick={() => handleClickTitle(props.name)}>Hi {props.name}</h1>
+  // }
+  // type 为 App 函数本身，执行后得到返回结果，即 children
+  const children = [fiber.type(fiber.props)]
+  reconcileChildren(fiber, children)
+}
+
+/**
+ * 处理普通组件
+ * @param {*} fiber 
+ */
+function updateHostComponent(fiber) {
+  // 1. 为 fiber 创建 dom
+  if (!fiber.dom) fiber.dom = createDom(fiber)
+  // 2. 创建 new fiber，处理 fiber 和 fiber children 之间的关系
+  const elements = fiber.props.children;
+  reconcileChildren(fiber, elements)
+}
+
+/**
+ *  * 计算单个工作单元及其 children 的新增、删除、更新改动，生成新 fiber
  * @param {*} wipFiber 
  * @param {*} elements 
  */
@@ -217,7 +269,7 @@ function reconcileChildren(wipFiber, elements) {
         type: oldFiber.type,
         dom: oldFiber.dom,
         alternate: oldFiber,
-        props: element.props, 
+        props: element.props,
         effectTag: "UPDATE",
       }
     }
