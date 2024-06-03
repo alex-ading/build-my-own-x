@@ -1,3 +1,4 @@
+// https://pomb.us/build-your-own-react/
 /**
  * 创建 vnode
  * @param {*} type element 类型，如 div
@@ -54,6 +55,9 @@ let nextUnitOfWork = null // 下一个工作单元
 let wipRoot = null // 根工作单元， work in progress root
 let currentRoot = null // 上一个 fiber 树
 let deletions = null
+
+let wipFiber = null // 函数组件 hook 使用，记录上一个 fiber
+let hookIndex = null
 
 // 判断是否为事件属性
 const isEvent = key => key.startsWith("on")
@@ -218,12 +222,50 @@ function updateFunctionComponent(fiber) {
   // 函数组件没有 dom 节点
   // 函数自建的 props 来自于运行时的返回值，而不是依靠 babel 解析的
 
+  wipFiber = fiber  // 保存旧的 fiber
+  hookIndex = 0
+  wipFiber.hooks = [] // 清空旧 fiber hook
+
   // function App(props) {
   //   return <h1 onClick={() => handleClickTitle(props.name)}>Hi {props.name}</h1>
   // }
   // type 为 App 函数本身，执行后得到返回结果，即 children
   const children = [fiber.type(fiber.props)]
   reconcileChildren(fiber, children)
+}
+
+function useState(initial) {
+  const oldHook =
+    wipFiber.alternate &&
+    wipFiber.alternate.hooks &&
+    wipFiber.alternate.hooks[hookIndex]
+
+  const hook = {
+    state: oldHook ? oldHook.state : initial, // 复用旧 hook 的值
+    queue: [],
+  }
+
+  const actions = oldHook ? oldHook.queue : []
+  actions.forEach(action => {
+    hook.state = action(hook.state)
+  })
+
+  const setState = action => {
+    hook.queue.push(action)
+    wipRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    }
+    // 设置下一个工作单元
+    nextUnitOfWork = wipRoot // TODO: immediately, how about unfinished renders?
+    deletions = []
+  }
+
+  wipFiber.hooks.push(hook)
+  hookIndex++
+
+  return [hook.state, setState]
 }
 
 /**
@@ -335,7 +377,8 @@ requestIdleCallback(workLoop)
 
 const _React = {
   createElement,
-  render
+  render,
+  useState
 }
 
 export default _React
