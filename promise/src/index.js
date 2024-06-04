@@ -126,7 +126,7 @@ class MyPromise {
   }
 
   /**
-   * 
+   * 对 promise1 的结果进行分类处理，在合适的时机 resolve() 或 reject()
    * @param {*} promise2 promise1.then 返回的新的 promise 对象
    * @param {*} x promise1 onFulfilled 或 onRejected 的返回值
    * @param {*} resolve promise2 的 resolve
