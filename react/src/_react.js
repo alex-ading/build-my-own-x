@@ -304,7 +304,7 @@ function reconcileChildren(wipFiber, elements) {
     let newFiber = null;
 
     // 判断新旧 fiber 是否是相同类型元素
-    const sameType = oldFiber && element && element.type == oldFiber.type
+    const sameType = oldFiber && element && element.type === oldFiber.type
     if (sameType) {
       newFiber = {
         parent: wipFiber,
