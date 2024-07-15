@@ -5,21 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@types/connect':
-    specifier: ^3.4.38
-    version: nexus3.bilibili.co/@types/connect@3.4.38
-  '@types/debug':
-    specifier: ^4.1.12
-    version: nexus3.bilibili.co/@types/debug@4.1.12
-  '@types/fs-extra':
-    specifier: ^11.0.4
-    version: nexus3.bilibili.co/@types/fs-extra@11.0.4
-  '@types/resolve':
-    specifier: ^1.20.6
-    version: nexus3.bilibili.co/@types/resolve@1.20.6
-  '@types/ws':
-    specifier: ^8.5.10
-    version: nexus3.bilibili.co/@types/ws@8.5.10
   cac:
     specifier: ^6.7.14
     version: nexus3.bilibili.co/cac@6.7.14
@@ -70,6 +55,15 @@ dependencies:
     version: nexus3.bilibili.co/ws@8.18.0
 
 devDependencies:
+  '@types/connect':
+    specifier: ^3.4.38
+    version: nexus3.bilibili.co/@types/connect@3.4.38
+  '@types/debug':
+    specifier: ^4.1.12
+    version: nexus3.bilibili.co/@types/debug@4.1.12
+  '@types/fs-extra':
+    specifier: ^11.0.4
+    version: nexus3.bilibili.co/@types/fs-extra@11.0.4
   '@types/koa':
     specifier: ^2.15.0
     version: nexus3.bilibili.co/@types/koa@2.15.0
@@ -79,6 +73,12 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.3.0
     version: nexus3.bilibili.co/@types/react-dom@18.3.0
+  '@types/resolve':
+    specifier: ^1.20.6
+    version: nexus3.bilibili.co/@types/resolve@1.20.6
+  '@types/ws':
+    specifier: ^8.5.10
+    version: nexus3.bilibili.co/@types/ws@8.5.10
   typescript:
     specifier: ^5.5.3
     version: nexus3.bilibili.co/typescript@5.5.3
@@ -890,6 +890,7 @@ packages:
     version: 3.4.38
     dependencies:
       '@types/node': nexus3.bilibili.co/@types/node@20.14.10
+    dev: true
 
   nexus3.bilibili.co/@types/content-disposition@0.5.8:
     resolution: {integrity: sha512-QVSSvno3dE0MgO76pJhmv4Qyi/j0Yk9pBp0Y7TJ2Tlj+KCgJWY6qX7nnxCOLkZ3VYRSIk1WTxCvwUSdx6CCLdg==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/content-disposition/-/content-disposition-0.5.8.tgz}
@@ -914,7 +915,7 @@ packages:
     version: 4.1.12
     dependencies:
       '@types/ms': nexus3.bilibili.co/@types/ms@0.7.34
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/estree/-/estree-1.0.5.tgz}
@@ -951,7 +952,7 @@ packages:
     dependencies:
       '@types/jsonfile': nexus3.bilibili.co/@types/jsonfile@6.1.4
       '@types/node': nexus3.bilibili.co/@types/node@20.14.10
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/@types/http-assert@1.5.5:
     resolution: {integrity: sha512-4+tE/lwdAahgZT1g30Jkdm9PzFRde0xwxBNUyRsCitRvCQB90iuA2uJYdUnhnANRcqGXaWOGY4FEoxeElNAK2g==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/http-assert/-/http-assert-1.5.5.tgz}
@@ -971,7 +972,7 @@ packages:
     version: 6.1.4
     dependencies:
       '@types/node': nexus3.bilibili.co/@types/node@20.14.10
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/@types/keygrip@1.0.6:
     resolution: {integrity: sha512-lZuNAY9xeJt7Bx4t4dx0rYCDqGPW8RXhQZK1td7d4H6E9zYbLoOtjBvfwdTKpsyxQI/2jv+armjX/RW+ZNpXOQ==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/keygrip/-/keygrip-1.0.6.tgz}
@@ -1012,7 +1013,7 @@ packages:
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/ms/-/ms-0.7.34.tgz}
     name: '@types/ms'
     version: 0.7.34
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/@types/node@20.14.10:
     resolution: {integrity: sha512-MdiXf+nDuMvY0gJKxyfZ7/6UFsETO7mGKF54MVD/ekJS6HdFtpZFBgrh6Pseu64XTb2MLyFPlbW6hj8HYRQNOQ==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/node/-/node-20.14.10.tgz}
@@ -1020,6 +1021,7 @@ packages:
     version: 20.14.10
     dependencies:
       undici-types: nexus3.bilibili.co/undici-types@5.26.5
+    dev: true
 
   nexus3.bilibili.co/@types/prop-types@15.7.12:
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/prop-types/-/prop-types-15.7.12.tgz}
@@ -1060,7 +1062,7 @@ packages:
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/resolve/-/resolve-1.20.6.tgz}
     name: '@types/resolve'
     version: 1.20.6
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/@types/send@0.17.4:
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/@types/send/-/send-0.17.4.tgz}
@@ -1087,7 +1089,7 @@ packages:
     version: 8.5.10
     dependencies:
       '@types/node': nexus3.bilibili.co/@types/node@20.14.10
-    dev: false
+    dev: true
 
   nexus3.bilibili.co/accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/accepts/-/accepts-1.3.8.tgz}
@@ -2502,6 +2504,7 @@ packages:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/undici-types/-/undici-types-5.26.5.tgz}
     name: undici-types
     version: 5.26.5
+    dev: true
 
   nexus3.bilibili.co/universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==, registry: http://registry.npm.bilibili.co/, tarball: https://nexus3.bilibili.co/repository/npm-public/universalify/-/universalify-2.0.1.tgz}

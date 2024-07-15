@@ -2,7 +2,13 @@ import path from "path";
 import { build } from "esbuild";
 import { green } from "picocolors";
 import { scanPlugin } from "./scanPlugin";
+import { preBundlePlugin } from "./preBundlePlugin";
+import { PRE_BUNDLE_DIR } from '../constant'
 
+/**
+ * 
+ * @param root 命令执行的路径
+ */
 export async function optimize(root: string) {
   // 1. 确定入口
   const entry = path.resolve(root, "example/src/main.tsx");
@@ -23,4 +29,13 @@ export async function optimize(root: string) {
   );
   
   // 3. 预构建依赖
+  await build({
+    entryPoints: [...deps],
+    write: true,
+    bundle: true,
+    format: "esm",
+    splitting: true,
+    outdir: path.resolve(root, PRE_BUNDLE_DIR),
+    plugins: [preBundlePlugin(deps)],
+  });
 }

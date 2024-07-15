@@ -1,9 +1,14 @@
 import { Plugin } from "esbuild";
 import { BARE_IMPORT_RE, EXTERNAL_TYPES } from "../constant";
 
-export function scanPlugin(deps: Set<string>): Plugin {
+/**
+ * 扫描第三方依赖
+ * @param deps 
+ * @returns 
+ */
+export const scanPlugin = (deps: Set<string>): Plugin => {
   return {
-    name: "scan-deps", // 插件名字
+    name: "scan", // 插件名字
     setup(build) {
       // 插件逻辑，在构建的时候执行
       // 过滤掉 css 等文件
