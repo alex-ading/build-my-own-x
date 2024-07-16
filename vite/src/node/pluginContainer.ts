@@ -18,11 +18,13 @@ export const createPluginContainer = (plugins: Plugin[]): PluginContainer => {
   // 插件上下文对象
   // @ts-ignore 这里仅实现上下文对象的 resolve 方法
   class Context implements RollupPluginContext {
+    // 解析模块路径
     async resolve(id: string, importer?: string) {
       let out = await pluginContainer.resolveId(id, importer);
       if (typeof out === "string") out = { id: out };
       return out as ResolvedId | null;
     }
+    // 还包括生产依赖图等方法，省略了
   }
 
   // 插件容器

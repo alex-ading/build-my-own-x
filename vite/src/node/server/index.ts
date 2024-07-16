@@ -1,6 +1,7 @@
 import Koa from "koa";
 import { blue, green } from "picocolors"; // 命令行颜色
 import { optimize } from "../optimizer";
+import { renderHtml } from "./middlewares/renderHtml";
 
 export interface ServerContext {}
 
@@ -10,9 +11,7 @@ export async function startDevServer() {
   console.log('root: ', root);
   const startTime = Date.now();
 
-  app.use((ctx) => {
-    ctx.body = '22'
-  })
+  app.use(renderHtml);
 
   app.listen(3000, async () => {
     await optimize(root);
