@@ -54,7 +54,7 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
             );
           } else {
             // esm：export * 导出所有命名导出，export default 导出默认导出
-            if (exports.includes("default")) {
+            if ((exports as any).includes("default")) {
               proxyModule.push(`import d from "${entryPath}";export default d`);
             }
             proxyModule.push(`export * from "${entryPath}"`);

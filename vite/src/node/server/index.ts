@@ -2,6 +2,8 @@ import Koa from "koa";
 import { blue, green } from "picocolors"; // 命令行颜色
 import { optimize } from "../optimizer";
 
+export interface ServerContext {}
+
 export async function startDevServer() {
   const app = new Koa();
   const root = process.cwd();
