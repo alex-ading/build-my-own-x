@@ -7,7 +7,7 @@ import { init, parse } from "es-module-lexer";
 
 export function preBundlePlugin(deps: Set<string>): Plugin {
   return {
-    name: "pre-bundle",
+    name: "esbuild:pre-bundle",
     setup(build) {
       build.onResolve(
         {
@@ -15,22 +15,24 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
         },
         (args) => {
           const { path, importer } = args;
-          const isEntry = !importer;
+          const isEntry = !importer; // TODO whats importer
           if (deps.has(path)) {
             return isEntry
               ? {
                   path,
-                  namespace: "dep", // TODO 若为入口，则标记 dep 的 namespace
+                  namespace: "dep", // 若为入口（如 react），则标记 dep 的 namespace
                 }
               : {
+                  // 解析 node 路径
                   // react -> /Users/ading/Desktop/personal/build-my-own-x/vite/node_modules/react/index.js
-                  path: resolve.sync(path, { basedir: process.cwd() }), // 解析 node 路径
+                  path: resolve.sync(path, { basedir: process.cwd() }), // TODO why react.js appears
                 };
           }
         }
       );
 
-      // 打包三方依赖
+      // 打包三方依赖，相当于重新为开发环境的引用生成一个入口文件
+      // 入口文件导出了三方依赖的导出
       build.onLoad(
         {
           filter: /.*/,
@@ -40,6 +42,7 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
           await init;
           const { path: filePath } = args; // 这里获取到的是 2 个 react 包
           const root = process.cwd();
+          // react -> /Users/ading/Desktop/personal/build-my-own-x/vite/node_modules/react/index.js
           const entryPath = resolve.sync(filePath, { basedir: root });
           const code = await fs.readFile(entryPath, "utf-8");
           const [imports, exports] = parse(code);
@@ -68,7 +71,7 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
             resolveDir: root,
           };
         }
-      )
+      );
     },
   };
 }

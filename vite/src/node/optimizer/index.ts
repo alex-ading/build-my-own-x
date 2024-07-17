@@ -1,12 +1,12 @@
 import path from "path";
 import { build } from "esbuild";
-import { green } from "picocolors";
+import { blue } from "picocolors";
 import { scanPlugin } from "./scanPlugin";
 import { preBundlePlugin } from "./preBundlePlugin";
 import { PRE_BUNDLE_DIR } from '../constant'
 
 /**
- * 
+ * 使用 esbuild 预构建三方依赖，并存储到 dist
  * @param root 命令执行的路径
  */
 export async function optimize(root: string) {
@@ -22,8 +22,8 @@ export async function optimize(root: string) {
     plugins: [scanPlugin(deps)],
   });
   console.log(
-    `${green("需要预构建的依赖")}:\n${[...deps]
-      .map(green)
+    `${"需要预构建的依赖："}\n${[...deps]
+      .map(blue)
       .map((item) => `  ${item}`)
       .join("\n")}`
   );

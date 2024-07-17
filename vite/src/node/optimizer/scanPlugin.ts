@@ -8,7 +8,7 @@ import { BARE_IMPORT_RE, EXTERNAL_TYPES } from "../constant";
  */
 export const scanPlugin = (deps: Set<string>): Plugin => {
   return {
-    name: "scan", // 插件名字
+    name: "esbuild:scan", // 插件名字
     setup(build) {
       // 插件逻辑，在构建的时候执行
       // 过滤掉 css 等文件
