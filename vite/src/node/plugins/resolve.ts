@@ -5,6 +5,10 @@ import path from "path";
 import { pathExists } from "fs-extra";
 import { DEFAULT_EXTENSIONS } from "../constant";
 
+/**
+ * 对开发时前端页面请求的路径进行处理，转换为文件系统中的路径
+ * @returns 
+ */
 export function resolvePlugin(): Plugin {
   let serverContext: ServerContext;
 
@@ -13,7 +17,6 @@ export function resolvePlugin(): Plugin {
     configureServer(s) {
       serverContext = s;
     },
-    // 路径解析插件，对开发时前端页面请求的路径进行处理，转换为文件系统中的路径
     async resolveId(id: string, importer?: string) {
       // 1. 绝对路径，id 即为 path
       if (path.isAbsolute(id)) {

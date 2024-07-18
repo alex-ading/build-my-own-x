@@ -14,3 +14,7 @@ export const BARE_IMPORT_RE = /^[\w@][^:]/;
 export const PRE_BUNDLE_DIR = path.join("node_modules", ".mini-vite");
 
 export const DEFAULT_EXTENSIONS = [".tsx", ".ts", ".jsx", "js"];
+
+export const JS_TYPES_RE = /\.(?:j|t)sx?$|\.mjs$/;
+export const QUERY_RE = /\?.*$/s;
+export const HASH_RE = /#.*$/s;
