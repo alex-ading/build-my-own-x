@@ -10,7 +10,7 @@ export const cleanUrl = (url: string): string =>
   url.replace(HASH_RE, "").replace(QUERY_RE, ""); 
 
 /**
- * 是否为对 js 文件的请求
+ * 是否为对 js/ts/三方包 文件的请求
  * @param id 
  * @returns 
  */

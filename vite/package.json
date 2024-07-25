@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mini-vite",
-    "start": "tsup --watch",
+    "dev": "mini-vite",
+    "compile": "tsup --watch",
     "build": "tsup --minify"
   },
   "bin": {
