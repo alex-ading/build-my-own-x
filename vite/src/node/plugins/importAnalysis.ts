@@ -14,8 +14,11 @@ export function importAnalysisPlugin(): Plugin {
 
   return {
     name: "mini-vite:import-analysis",
+    /**
+     * 保存服务端上下文
+     * @param s 
+     */
     configureServer(s) {
-      // 保存服务端上下文
       serverContext = s;
     },
     async transform(code: string, id: string) {
@@ -37,8 +40,9 @@ export function importAnalysisPlugin(): Plugin {
           magicString.overwrite(modStart, modEnd, bundlePath);
         } else if (modSource.startsWith(".") || modSource.startsWith("/")) { 
           // 相对路径或绝对路径
-          // 直接调用插件上下文的 resolveId 方法
-          const resolved = await this.resolveId!(modSource, id);
+          // 直接调用插件上下文的 resolveId 方法 // TODO
+          console.log('--this==', this)
+          const resolved = await serverContext.pluginContainer.resolveId!(modSource, id);
           if (resolved) {
             magicString.overwrite(modStart, modEnd, resolved.id);
           }

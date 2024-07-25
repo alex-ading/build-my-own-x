@@ -1,8 +1,8 @@
 import Koa from "koa";
 import { blue } from "picocolors"; // 命令行颜色
 import { optimize } from "../optimizer";
-import { renderHtml } from "./middlewares/renderHtml";
-import { resolvePlugins } from "../plugins";
+import { renderHtml, transform } from "./middlewares";
+import { getPlugins } from "../plugins";
 import { createPluginContainer, PluginContainer } from "../pluginContainer";
 import { Plugin } from "../plugin";
 
@@ -19,7 +19,7 @@ export async function startDevServer() {
   const startTime = Date.now();
 
   // vite 插件
-  const plugins = resolvePlugins();
+  const plugins = getPlugins();
   const pluginContainer = createPluginContainer(plugins);
   const serverContext: ServerContext = {
     root: process.cwd(),
@@ -27,13 +27,15 @@ export async function startDevServer() {
     pluginContainer,
     plugins,
   };
+  
   for (const plugin of plugins) {
-    if (plugin.configureServer) {
-      await plugin.configureServer(serverContext);
-    }
+    // 保存服务端上下文
+    plugin.configureServer && await plugin.configureServer(serverContext);
   }
 
   app.use(renderHtml);
+  
+  app.use(transform(serverContext));
 
   app.listen(3000, async () => {
     await optimize(root); // esbuild
