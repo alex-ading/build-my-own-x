@@ -5,7 +5,7 @@ import type {
   PluginContext as RollupPluginContext,
   ResolvedId,
 } from "rollup";
-import { Plugin } from './plugin';
+import { Plugin } from './types';
 
 export interface PluginContainer {
   resolveId(id: string, importer?: string): Promise<PartialResolvedId | null>;

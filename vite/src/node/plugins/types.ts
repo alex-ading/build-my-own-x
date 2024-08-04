@@ -1,5 +1,5 @@
 import { LoadResult, PartialResolvedId, SourceDescription } from "rollup";
-import { ServerContext } from "./server";
+import { ServerContext } from "../server";
 
 export type ServerHook = (
   server: ServerContext

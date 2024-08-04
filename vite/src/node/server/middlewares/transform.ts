@@ -1,6 +1,6 @@
 import path from "path";
 import { Context } from "koa";
-import { isJSRequest, cleanUrl } from "../../utils";
+import { isJSRequest, cleanUrl } from "../../utils/utils";
 import { ServerContext } from "../index";
 
 export async function transformRequest(

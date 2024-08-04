@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "mini-vite",
+    "dev": "node bin/mini-vite",
     "compile": "tsup --watch",
     "build": "tsup --minify"
   },

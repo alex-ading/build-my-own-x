@@ -2,11 +2,11 @@ import { init, parse } from "es-module-lexer";
 import {
   BARE_IMPORT_RE,
   PRE_BUNDLE_DIR,
-} from "../constant";
-import { isJSRequest } from "../utils";
+} from "../utils/constant";
+import { isJSRequest } from "../utils/utils";
 import MagicString from "magic-string";
 import path from "path";
-import { Plugin } from "../plugin";
+import { Plugin } from "./types";
 import { ServerContext } from "../server/index";
 
 export function importAnalysisPlugin(): Plugin {

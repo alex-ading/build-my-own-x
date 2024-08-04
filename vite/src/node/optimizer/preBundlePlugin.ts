@@ -2,7 +2,7 @@ import path from "path";
 import resolve from "resolve";
 import fs from "fs-extra";
 import { Loader, Plugin } from "esbuild";
-import { BARE_IMPORT_RE } from "../constant";
+import { BARE_IMPORT_RE } from "../utils/constant";
 import { init, parse } from "es-module-lexer";
 
 export function preBundlePlugin(deps: Set<string>): Plugin {

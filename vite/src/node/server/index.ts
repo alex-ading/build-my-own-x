@@ -3,8 +3,8 @@ import { blue } from "picocolors"; // 命令行颜色
 import { optimize } from "../optimizer";
 import { renderHtml, transform } from "./middlewares";
 import { getPlugins } from "../plugins";
-import { createPluginContainer, PluginContainer } from "../pluginContainer";
-import { Plugin } from "../plugin";
+import { createPluginContainer, PluginContainer } from "../plugins/pluginContainer";
+import { Plugin } from "../plugins/types";
 
 export interface ServerContext {
   root: string;

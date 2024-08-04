@@ -3,7 +3,7 @@ import { build } from "esbuild";
 import { blue } from "picocolors";
 import { scanPlugin } from "./scanPlugin";
 import { preBundlePlugin } from "./preBundlePlugin";
-import { PRE_BUNDLE_DIR } from '../constant'
+import { PRE_BUNDLE_DIR } from '../utils/constant'
 
 /**
  * 使用 esbuild 预构建三方依赖，并存储到 dist
