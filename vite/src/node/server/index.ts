@@ -33,7 +33,7 @@ export async function startDevServer() {
     plugin.configureServer && await plugin.configureServer(serverContext);
   }
 
-  app.use(renderHtml);
+  app.use(renderHtml(serverContext));
   
   app.use(transform(serverContext));
 

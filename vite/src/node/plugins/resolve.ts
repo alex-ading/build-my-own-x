@@ -22,15 +22,13 @@ export function resolvePlugin(): Plugin {
       serverContext = s;
     },
     async resolveId(id: string, importer?: string) {
-      console.log('resolveId id: ', id);
       // 1. 绝对路径，id 即为 path
       if (path.isAbsolute(id)) {
         if (await pathExists(id)) {
           return { id };
         }
         // 加上 root 路径前缀，处理 /src/main.tsx 的情况
-        id = path.join(serverContext.root, 'example', id);
-        console.log('--id--: ', id);
+        id = path.join(serverContext.root, id.startsWith('/node_modules') ? '' : 'example', id);
         if (await pathExists(id)) {
           return { id };
         }

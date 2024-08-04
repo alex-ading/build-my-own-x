@@ -11,8 +11,6 @@ export async function transformRequest(
   url = cleanUrl(url);
   // 依次调用插件容器的 resolveId、load、transform 方法
   const resolvedResult = await pluginContainer.resolveId(url);
-  console.log('url: ', url);
-  console.log('resolvedResult: ', resolvedResult);
   let transformResult;
   if (resolvedResult?.id) {
     let res = await pluginContainer.load(resolvedResult.id);
@@ -26,7 +24,6 @@ export async function transformRequest(
       );
     }
   }
-  console.log('transformResult: ', transformResult);
   return transformResult;
 }
 

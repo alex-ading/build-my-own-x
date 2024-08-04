@@ -11,7 +11,7 @@ import path from "path";
 export function esbuildTransformPlugin(): Plugin {
   return {
     name: "mini-vite:esbuild-transform",
-    async load(id) {
+    async load(id: string) {
       if (isJSRequest(id)) {
         try {
           const code = await readFile(id, "utf-8");
@@ -21,7 +21,8 @@ export function esbuildTransformPlugin(): Plugin {
         }
       }
     },
-    async transform(code, id) {
+    async transform(code: string, id: string) {
+      console.log('执行顺序 1')
       if (isJSRequest(id)) {
         const extname = path.extname(id).slice(1); // 扩展名
         const { code: transformedCode, map } = await esbuild.transform(code, {
@@ -29,6 +30,7 @@ export function esbuildTransformPlugin(): Plugin {
           format: "esm",
           sourcemap: true,
           loader: extname as "js" | "ts" | "jsx" | "tsx",
+          jsx: 'automatic'
         });
 
         return {

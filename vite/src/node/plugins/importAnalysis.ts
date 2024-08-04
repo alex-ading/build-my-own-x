@@ -22,6 +22,7 @@ export function importAnalysisPlugin(): Plugin {
       serverContext = s;
     },
     async transform(code: string, id: string) {
+      console.log('执行顺序 2')
       // 只处理 JS 相关的请求
       if (!isJSRequest(id)) {
         return null;
@@ -41,7 +42,6 @@ export function importAnalysisPlugin(): Plugin {
         } else if (modSource.startsWith(".") || modSource.startsWith("/")) { 
           // 相对路径或绝对路径
           // 直接调用插件上下文的 resolveId 方法 // TODO
-          console.log('--this==', this)
           const resolved = await serverContext.pluginContainer.resolveId!(modSource, id);
           if (resolved) {
             magicString.overwrite(modStart, modEnd, resolved.id);

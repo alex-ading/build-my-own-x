@@ -24,7 +24,6 @@ export const createPluginContainer = (plugins: Plugin[]): PluginContainer => {
       if (typeof out === "string") out = { id: out };
       return out as ResolvedId | null;
     }
-    // 还包括生产依赖图等方法，省略了
   }
 
   // 插件容器
