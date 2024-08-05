@@ -22,7 +22,6 @@ export function importAnalysisPlugin(): Plugin {
       serverContext = s;
     },
     async transform(code: string, id: string) {
-      console.log('执行顺序 2')
       // 只处理 JS 相关的请求
       if (!isJSRequest(id)) {
         return null;

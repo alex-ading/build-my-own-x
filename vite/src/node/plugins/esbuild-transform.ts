@@ -22,7 +22,6 @@ export function esbuildTransformPlugin(): Plugin {
       }
     },
     async transform(code: string, id: string) {
-      console.log('执行顺序 1')
       if (isJSRequest(id)) {
         const extname = path.extname(id).slice(1); // 扩展名
         const { code: transformedCode, map } = await esbuild.transform(code, {
