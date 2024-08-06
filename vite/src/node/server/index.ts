@@ -1,9 +1,9 @@
 import Koa from "koa";
 import { blue } from "picocolors"; // 命令行颜色
 import { optimize } from "../optimizer";
-import { renderHtml, transform } from "./middlewares";
+import { renderHtml, transform, renderStatic } from "./middlewares";
 import { getPlugins } from "../plugins";
-import { createPluginContainer, PluginContainer } from "../plugins/pluginContainer";
+import { createPluginContainer, PluginContainer } from "../plugins/plugin-container";
 import { Plugin } from "../plugins/types";
 
 export interface ServerContext {
@@ -36,6 +36,8 @@ export async function startDevServer() {
   app.use(renderHtml(serverContext));
   
   app.use(transform(serverContext));
+
+  app.use(renderStatic(serverContext));
 
   app.listen(3000, async () => {
     await optimize(root); // esbuild

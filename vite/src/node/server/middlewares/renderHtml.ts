@@ -9,7 +9,7 @@ export const renderHtml = (serverContext: ServerContext) => {
     console.log('请求路径：', blue(ctx.req.url));
     if (ctx.req.url === "/") {
       // 默认使用项目根目录下的 index.html
-      const indexHtmlPath = path.join(serverContext.root, "example/index.html");
+      const indexHtmlPath = path.join(serverContext.root, "/example/index.html");
       if (await pathExists(indexHtmlPath)) {
         const rawHtml = await readFile(indexHtmlPath, "utf8");
         ctx.res.setHeader("Content-Type", "text/html");

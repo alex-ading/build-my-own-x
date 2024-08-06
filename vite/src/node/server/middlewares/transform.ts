@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { isJSRequest, cleanUrl, isCSSRequest } from "../../utils/utils";
+import { isJSRequest, cleanUrl, isCSSRequest, isImportRequest } from "../../utils/utils";
 import { ServerContext } from "../index";
 
 export async function transformRequest(
@@ -29,7 +29,7 @@ export async function transformRequest(
 export const transform = (serverContext: ServerContext) => {
   return async (ctx: Context, next: () => Promise<void>) => {
     const url = ctx.req.url as string;
-    if (isJSRequest(url) || isCSSRequest(url)) {
+    if (isJSRequest(url) || isCSSRequest(url) || isImportRequest(url)) {
       let result = await transformRequest(url, serverContext);
       if (!result) {
         return next();

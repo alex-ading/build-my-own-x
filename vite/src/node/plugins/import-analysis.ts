@@ -1,8 +1,5 @@
 import { init, parse } from "es-module-lexer";
-import {
-  BARE_IMPORT_RE,
-  PRE_BUNDLE_DIR,
-} from "../utils/constant";
+import { BARE_IMPORT_RE, PRE_BUNDLE_DIR } from "../utils/constant";
 import { isJSRequest } from "../utils/utils";
 import MagicString from "magic-string";
 import path from "path";
@@ -16,7 +13,7 @@ export function importAnalysisPlugin(): Plugin {
     name: "mini-vite:import-analysis",
     /**
      * 保存服务端上下文
-     * @param s 
+     * @param s
      */
     configureServer(s) {
       serverContext = s;
@@ -34,14 +31,25 @@ export function importAnalysisPlugin(): Plugin {
       for (const importInfo of imports) {
         const { s: modStart, e: modEnd, n: modSource } = importInfo;
         if (!modSource) continue;
+        
+        // 处理静态资源，如 jpg
+        if (modSource.endsWith(".jpg")) {
+          const resolvedUrl = path.join(path.dirname(id), modSource);
+          magicString.overwrite(modStart, modEnd, `${resolvedUrl}?import`); // 加上 ?import 后缀
+          continue;
+        }
+
         // 第三方库: 路径重写到预构建产物的路径
         if (BARE_IMPORT_RE.test(modSource)) {
           const bundlePath = path.join("/", PRE_BUNDLE_DIR, `${modSource}.js`);
           magicString.overwrite(modStart, modEnd, bundlePath);
-        } else if (modSource.startsWith(".") || modSource.startsWith("/")) { 
+        } else if (modSource.startsWith(".") || modSource.startsWith("/")) {
           // 相对路径或绝对路径
           // 直接调用插件上下文的 resolveId 方法 // TODO
-          const resolved = await serverContext.pluginContainer.resolveId!(modSource, id);
+          const resolved = await serverContext.pluginContainer.resolveId!(
+            modSource,
+            id
+          );
           if (resolved) {
             magicString.overwrite(modStart, modEnd, resolved.id);
           }

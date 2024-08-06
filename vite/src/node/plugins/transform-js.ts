@@ -10,7 +10,7 @@ import path from "path";
  */
 export function esbuildTransformPlugin(): Plugin {
   return {
-    name: "mini-vite:esbuild-transform",
+    name: "mini-vite:transform-js",
     async load(id: string) {
       if (isJSRequest(id)) {
         try {

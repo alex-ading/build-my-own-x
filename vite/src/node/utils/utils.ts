@@ -27,3 +27,20 @@ export const isJSRequest = (id: string): boolean => {
 
 export const isCSSRequest = (id: string): boolean =>
   cleanUrl(id).endsWith(".css");
+
+export function isImportRequest(url: string): boolean {
+  return url.endsWith("?import");
+}
+
+/**
+ * 去除 ?import 后的 url
+ * @param url 
+ * @returns 
+ */
+export function removeImportQuery(url: string): string {
+  return url.replace(/\?import$/, "");
+}
+
+export function getShortName(file: string, root: string) {
+  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+}

@@ -3,7 +3,7 @@ import { Plugin } from "./types";
 
 export function cssPlugin(): Plugin {
   return {
-    name: "mini-vite:css",
+    name: "mini-vite:transform-css",
     load(id) {
       if (id.endsWith(".css")) {
         return readFile(id, "utf-8");
