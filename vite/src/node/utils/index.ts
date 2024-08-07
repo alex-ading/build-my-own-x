@@ -5,7 +5,8 @@ export {
   DEFAULT_EXTENSIONS,
   JS_TYPES_RE,
   QUERY_RE,
-  HASH_RE
+  HASH_RE,
+  HMR_PORT,
  } from './constant'
 
  export {
