@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node bin/mini-vite",
+    "dev": "nodemon --watch dist,example --ext js,ts,tsx,css bin/mini-vite",
     "compile": "tsup --watch",
     "build": "tsup --minify"
   },
@@ -40,6 +40,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/resolve": "^1.20.6",
     "@types/ws": "^8.5.10",
+    "nodemon": "^3.1.4",
     "typescript": "^5.5.3"
   }
 }
