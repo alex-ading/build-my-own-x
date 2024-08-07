@@ -1,14 +1,27 @@
 import { Context } from "koa";
-import { isJSRequest, cleanUrl, isCSSRequest, isImportRequest } from "../../utils/utils";
+import {
+  isJSRequest,
+  cleanUrl,
+  isCSSRequest,
+  isImportRequest,
+} from "../../utils";
 import { ServerContext } from "../index";
 
 export async function transformRequest(
   url: string,
   serverContext: ServerContext
 ) {
-  const { pluginContainer } = serverContext;
   url = cleanUrl(url);
+
+  // 获取缓存的编译结果，直接返回
+  const { moduleGraph } = serverContext;
+  let mod = await moduleGraph.getModuleByUrl(url);
+  if (mod && mod.transformResult) {
+    return mod.transformResult;
+  }
+
   // 依次调用插件容器的 resolveId、load、transform 方法
+  const { pluginContainer } = serverContext;
   const resolvedResult = await pluginContainer.resolveId(url);
   let transformResult;
   if (resolvedResult?.id) {
@@ -16,12 +29,18 @@ export async function transformRequest(
     if (typeof res === "object" && res !== null) {
       res = res.code;
     }
+
+    // 注册模块
+    const mod = await moduleGraph.ensureEntryFromUrl(url);
+    // 获取编译结果
     if (res) {
       transformResult = await pluginContainer.transform(
         res as string,
         resolvedResult?.id
       );
     }
+    // 缓存编译结果
+    if (mod) mod.transformResult = transformResult;
   }
   return transformResult;
 }
@@ -43,5 +62,5 @@ export const transform = (serverContext: ServerContext) => {
       ctx.res.end(result);
     }
     await next();
-  }
+  };
 };

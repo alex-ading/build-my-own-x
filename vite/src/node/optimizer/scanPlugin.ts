@@ -1,5 +1,5 @@
 import { Plugin } from "esbuild";
-import { BARE_IMPORT_RE, EXTERNAL_TYPES } from "../utils/constant";
+import { BARE_IMPORT_RE, EXTERNAL_TYPES } from "../utils";
 
 /**
  * 扫描第三方依赖

@@ -1,6 +1,6 @@
 import { readFile } from "fs-extra";
 import { Plugin } from "./types";
-import { isJSRequest } from "../utils/utils";
+import { isJSRequest } from "../utils";
 import esbuild from "esbuild";
 import path from "path";
 

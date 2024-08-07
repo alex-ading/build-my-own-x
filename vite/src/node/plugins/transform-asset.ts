@@ -1,6 +1,6 @@
 import { Plugin } from "./types";
 import { ServerContext } from "../server";
-import { cleanUrl, getShortName, removeImportQuery } from "../utils/utils";
+import { cleanUrl, getShortName, removeImportQuery } from "../utils";
 
 export function assetPlugin(): Plugin {
   let serverContext: ServerContext;

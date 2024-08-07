@@ -3,7 +3,7 @@ import { Plugin } from "./types";
 import { ServerContext } from "../server/index";
 import path from "path";
 import { pathExists } from "fs-extra";
-import { DEFAULT_EXTENSIONS } from "../utils/constant";
+import { DEFAULT_EXTENSIONS } from "../utils";
 
 /**
  * 对开发时前端页面请求的绝对路径和相对路径进行处理，转换为文件系统中的路径

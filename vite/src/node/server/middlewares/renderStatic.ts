@@ -2,7 +2,7 @@ import path from 'path';
 import mime from 'mime-types';
 import { Context } from "koa";
 import { ServerContext } from "../index";
-import { isImportRequest } from '../../utils/utils'
+import { isImportRequest } from '../../utils'
 import { pathExists, readFile } from "fs-extra";
 
 export const renderStatic = (serverContext: ServerContext) => {

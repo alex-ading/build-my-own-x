@@ -5,12 +5,14 @@ import { renderHtml, transform, renderStatic } from "./middlewares";
 import { getPlugins } from "../plugins";
 import { createPluginContainer, PluginContainer } from "../plugins/plugin-container";
 import { Plugin } from "../plugins/types";
+import { ModuleGraph } from "../module-graph";
 
 export interface ServerContext {
   root: string;
   app: Koa<Koa.DefaultState, Koa.DefaultContext>;
   pluginContainer: PluginContainer;
   plugins: Plugin[];
+  moduleGraph: ModuleGraph;
 }
 
 export async function startDevServer() {
@@ -21,11 +23,13 @@ export async function startDevServer() {
   // vite 插件
   const plugins = getPlugins();
   const pluginContainer = createPluginContainer(plugins);
+  const moduleGraph = new ModuleGraph((url) => pluginContainer.resolveId(url));
   const serverContext: ServerContext = {
     root: process.cwd(),
     app,
     pluginContainer,
     plugins,
+    moduleGraph,
   };
   
   for (const plugin of plugins) {
