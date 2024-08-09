@@ -11,6 +11,8 @@ import { Plugin } from "../plugins/types";
 import { ModuleGraph } from "../module-graph";
 import chokidar, { FSWatcher } from "chokidar";
 import { createWebSocketServer } from "../ws";
+import { bindingHMREvents } from "../hmr";
+
 export interface ServerContext {
   root: string;
   app: Koa<Koa.DefaultState, Koa.DefaultContext>;
@@ -35,7 +37,7 @@ export async function startDevServer() {
   const ws = createWebSocketServer(app);
   // 文件监听器，监听文件变动
   const watcher = chokidar.watch(root, {
-    ignored: ["**/node_modules/**", "**/.git/**"],
+    ignored: ["**/node_modules/**", "**/.git/**", `${root}/src`],
     ignoreInitial: true,
   });
 
@@ -48,6 +50,8 @@ export async function startDevServer() {
     ws,
     watcher
   };
+
+  bindingHMREvents(serverContext);
 
   for (const plugin of plugins) {
     // 保存服务端上下文
