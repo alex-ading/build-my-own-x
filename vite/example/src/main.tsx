@@ -3,7 +3,7 @@ import App from './App'
 import './index.css'
 import { sum } from './utils'
 
-const name = '4'
+const name = '999'
 sum(1, 2);
 const container = document.getElementById('root');
 const root = createRoot(container!);

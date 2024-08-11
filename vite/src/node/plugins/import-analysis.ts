@@ -57,7 +57,7 @@ export function importAnalysisPlugin(): Plugin {
       // 对每一个 import 语句依次进行分析
       for (const importInfo of imports) {
         const { s: modStart, e: modEnd, n: modSource } = importInfo;
-        if (!modSource) continue;
+        if (!modSource || isInternalRequest(modSource)) continue;
 
         // 处理静态资源，如 jpg
         if (modSource.endsWith(".jpg")) {
