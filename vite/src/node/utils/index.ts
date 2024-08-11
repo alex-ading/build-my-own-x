@@ -7,13 +7,14 @@ export {
   QUERY_RE,
   HASH_RE,
   HMR_PORT,
- } from './constant'
+  CLIENT_PUBLIC_PATH
+} from './constant'
 
- export {
+export {
   cleanUrl,
   isJSRequest,
   isCSSRequest,
   isImportRequest,
   removeImportQuery,
   getShortName
- } from './utils'
+} from './utils'

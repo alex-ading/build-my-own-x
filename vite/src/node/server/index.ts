@@ -37,7 +37,7 @@ export async function startDevServer() {
   const ws = createWebSocketServer(app);
   // 文件监听器，监听文件变动
   const watcher = chokidar.watch(root, {
-    ignored: ["**/node_modules/**", "**/.git/**", `${root}/src`],
+    ignored: ["**/node_modules/**", "**/.git/**", `${root}/src`, /\.map$/],
     ignoreInitial: true,
   });
 

@@ -11,7 +11,13 @@ export const renderHtml = (serverContext: ServerContext) => {
       // 默认使用项目根目录下的 index.html
       const indexHtmlPath = path.join(serverContext.root, "/example/index.html");
       if (await pathExists(indexHtmlPath)) {
-        const rawHtml = await readFile(indexHtmlPath, "utf8");
+        let rawHtml = await readFile(indexHtmlPath, "utf8");
+        // 插入 client 脚本 <script type="module" src="/@vite/client"></script>
+        for (const plugin of serverContext.plugins) {
+          if (plugin.transformIndexHtml) {
+            rawHtml = await plugin.transformIndexHtml(rawHtml);
+          }
+        }
         ctx.res.setHeader("Content-Type", "text/html");
         ctx.res.end(rawHtml);
       }
