@@ -16,5 +16,6 @@ export {
   isCSSRequest,
   isImportRequest,
   removeImportQuery,
-  getShortName
+  getShortName,
+  isInternalRequest
 } from './utils'

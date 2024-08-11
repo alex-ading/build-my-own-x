@@ -15,7 +15,7 @@ export const renderStatic = (serverContext: ServerContext) => {
     }
     
     if (url.endsWith('jpg')) {
-      const imgPath = path.join(serverContext.root, url.slice(1));
+      const imgPath = path.join(serverContext.root, `example/${url}`);
       if (await pathExists(imgPath)) { 
         const img = await readFile(imgPath);
         const type = mime.lookup(imgPath);

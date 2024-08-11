@@ -1,4 +1,4 @@
-import { JS_TYPES_RE, QUERY_RE, HASH_RE } from "./constant";
+import { JS_TYPES_RE, QUERY_RE, HASH_RE, CLIENT_PUBLIC_PATH } from "./constant";
 import path from "path";
 
 /**
@@ -42,5 +42,14 @@ export function removeImportQuery(url: string): string {
 }
 
 export function getShortName(file: string, root: string) {
-  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+  return file.startsWith(root + "/") ? path.posix.relative(`${root}/example`, file) : file;
+}
+
+/**
+ * CLIENT_PUBLIC_PATH && /@react-refresh
+ * @param url 
+ * @returns 
+ */
+export function isInternalRequest(url: string): boolean {
+  return [CLIENT_PUBLIC_PATH, "/@react-refresh"].includes(url);
 }

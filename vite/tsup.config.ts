@@ -5,7 +5,7 @@ export default defineConfig({
     index: "src/node/cli.ts",
     client: "src/client/index.ts",
   },
-  format: ["esm", "cjs"],
+  format: ["esm"],
   target: "es2020",
   sourcemap: true,
   splitting: false, // 关闭拆包
