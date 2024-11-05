@@ -13,7 +13,8 @@ class Compiler {
   constructor(options) {
     this.options = options;
     this.rootPath = this.options.context || process.cwd().path.replace(/\\/g, '/');
-    this.hooks = { // 后续可从 options 里注册各个钩子的回调事件，并在特定时机执行
+    this.hooks = { // 后续可从 options 里注册各个钩子的回调事件，并在特定时机执行，即 plugins
+
       // 开始编译时的钩子
       run: new SyncHook(),
       // 写入文件之前的钩子，在开始执行写入动作时执行
@@ -122,7 +123,7 @@ class Compiler {
   }
 
   /**
-   * 执行 babel 等一系列编译
+   * 执行 babel 等一系列编译，包括递归编译依赖文件
    * @param {*} moduleName 入口模块名称
    * @param {*} absolutePath 模块的绝对路径
    */
