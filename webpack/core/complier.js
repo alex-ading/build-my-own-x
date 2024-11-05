@@ -122,7 +122,7 @@ class Compiler {
   }
 
   /**
-   * 执行 babel 等一系列编译
+   * 执行 babel 等一系列编译，包括递归编译依赖文件
    * @param {*} moduleName 入口模块名称
    * @param {*} absolutePath 模块的绝对路径
    */
