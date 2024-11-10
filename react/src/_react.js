@@ -351,7 +351,7 @@ function reconcileChildren(wipFiber, elements) {
 
 function workLoop(deadline) {
   // 分成了 render 和 commit 两个阶段
-  let shouldYield = false
+  let shouldYield = false // 是否该让出线程
   while (nextUnitOfWork && !shouldYield) {
     // 2. 一个工作单元接一个工作单元执行
     nextUnitOfWork = performUnitOfWork(
@@ -370,7 +370,7 @@ function workLoop(deadline) {
   requestIdleCallback(workLoop)
 }
 
-// 1. 浏览器空闲时启动
+// 1. 浏览器空闲时启动，react 使用的 requestIdleCallback 是自己实现的，因为 requestIdleCallback 本身兼容性并不好
 // render({}, document.getElementById('app'))
 requestIdleCallback(workLoop)
 
